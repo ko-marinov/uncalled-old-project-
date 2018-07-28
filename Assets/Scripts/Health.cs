@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class EnemyHp : MonoBehaviour {
+public class Health : MonoBehaviour {
 
     public float maxHp = 100;
 

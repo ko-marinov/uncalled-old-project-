@@ -36,19 +36,19 @@ public class Fight2D : MonoBehaviour
         if (!allTargets)
         {
             GameObject obj = NearTarget(point, colliders);
-            if (obj != null && obj.GetComponent<EnemyHp>())
+            if (obj != null && obj.GetComponent<Health>())
             {
                 //Destroy(obj);
-                obj.GetComponent<EnemyHp>().Hit(damage);
+                obj.GetComponent<Health>().Hit(damage);
             }
             return;
         }
 
         foreach (Collider2D hit in colliders)
         {
-            if (hit.GetComponent<EnemyHp>())
+            if (hit.GetComponent<Health>())
             {
-                hit.GetComponent<EnemyHp>().Hit(damage);
+                hit.GetComponent<Health>().Hit(damage);
             }
         }
     }
