@@ -20,7 +20,6 @@ public class SkeletonController : MonoBehaviour {
             currentState.Enter(this);
             horizontal = -1.0f;
             FaceLeft();
-            rigidBody2d.velocity = new Vector2(speed * horizontal, rigidBody2d.velocity.y);
         }
     }
 
@@ -33,7 +32,6 @@ public class SkeletonController : MonoBehaviour {
             currentState.Enter(this);
             horizontal = 1.0f;
             FaceRight();
-            rigidBody2d.velocity = new Vector2(speed * horizontal, rigidBody2d.velocity.y);
         }
     }
 
@@ -45,7 +43,6 @@ public class SkeletonController : MonoBehaviour {
             currentState = newState;
             currentState.Enter(this);
             horizontal = 0.0f;
-            rigidBody2d.velocity = new Vector2(speed * horizontal, rigidBody2d.velocity.y);
         }
     }
 
@@ -68,7 +65,6 @@ public class SkeletonController : MonoBehaviour {
             currentState = newState;
             currentState.Enter(this);
             horizontal = 0.0f;
-            rigidBody2d.velocity = new Vector2(speed * horizontal, rigidBody2d.velocity.y);
         }
     }
 
@@ -91,6 +87,7 @@ public class SkeletonController : MonoBehaviour {
     private void FixedUpdate()
     {
         JumpFaster();
+        rigidBody2d.velocity = new Vector2(speed * horizontal, rigidBody2d.velocity.y);
     }
 
     private void FaceLeft()
@@ -139,7 +136,9 @@ enum SkeletonCommand
     MOVE,
     STOP,
     JUMP,
-    ATTACK
+    ATTACK,
+    HIT,
+    DEATH
 };
 
 abstract class SkeletonState
@@ -153,6 +152,8 @@ abstract class SkeletonState
     public static SkeletonState MoveState = new SkeletonStateMoveState();
     public static SkeletonState JumpState = new SkeletonStateJumpState();
     public static SkeletonState AttackState = new SkeletonStateAttackState();
+    public static SkeletonState HitState = new SkeletonStateHitState();
+    public static SkeletonState DeathState = new SkeletonStateDeathState();
 }
 
 class SkeletonStateIdleState : SkeletonState
@@ -227,8 +228,7 @@ class SkeletonStateAttackState : SkeletonState
 {
     public override void Enter(SkeletonController skeleton)
     {
-        skeleton.animator.SetTrigger("Attack");
-        elapsedTime = 0;
+        skeleton.animator.SetBool("IsAttack", true);
     }
 
     public override SkeletonState HandleInput(SkeletonController skeleton, SkeletonCommand command)
@@ -238,16 +238,36 @@ class SkeletonStateAttackState : SkeletonState
 
     public override SkeletonState Update(SkeletonController skeleton)
     {
-        elapsedTime += Time.deltaTime;
-        if (elapsedTime < animationTime)
+        if (skeleton.animator.GetBool("IsAttack"))
         {
             return null;
         }
-
-        skeleton.animator.ResetTrigger("Attack");
         return IdleState;
     }
+}
 
-    private float elapsedTime;
-    private float animationTime = 1.0f;
+class SkeletonStateHitState : SkeletonState
+{
+    public override void Enter(SkeletonController skeleton)
+    {
+        skeleton.animator.SetBool("IsHit", true);
+    }
+
+    public override SkeletonState HandleInput(SkeletonController skeleton, SkeletonCommand command)
+    {
+        throw new System.NotImplementedException();
+    }
+}
+
+class SkeletonStateDeathState : SkeletonState
+{
+    public override void Enter(SkeletonController skeleton)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public override SkeletonState HandleInput(SkeletonController skeleton, SkeletonCommand command)
+    {
+        throw new System.NotImplementedException();
+    }
 }

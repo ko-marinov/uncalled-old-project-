@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 61765197971002218}
   - component: {fileID: 50730133721899544}
   - component: {fileID: 114051762668448204}
+  - component: {fileID: 114512037367224028}
   m_Layer: 0
   m_Name: Skeleton
   m_TagString: Untagged
@@ -124,6 +125,18 @@ MonoBehaviour:
   jumpSpeed: 12
   lowJumpMultiplier: 2
   fallMultiplier: 2.5
+--- !u!114 &114512037367224028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1073691428457582}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fac568fd31dcee04cb116030965e859b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skeletonController: {fileID: 114051762668448204}
 --- !u!212 &212518822331133296
 SpriteRenderer:
   m_ObjectHideFlags: 1
