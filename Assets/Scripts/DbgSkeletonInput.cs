@@ -10,9 +10,17 @@ class InputAxes
     public const string ATTACK      = "Fire1";
 }
 
+class Keymap
+{
+    public const KeyCode HURT        = KeyCode.Alpha1;
+    public const KeyCode SUICIDE     = KeyCode.Alpha2;
+}
+
 public class DbgSkeletonInput : MonoBehaviour {
 
     public SkeletonController skeletonController;
+    public Health             skeletonHealth;
+    public float              dbgDamage             = 10;
 	
 	// Update is called once per frame
 	void Update () {
@@ -20,6 +28,8 @@ public class DbgSkeletonInput : MonoBehaviour {
         var vertical   = Input.GetAxis(InputAxes.VERTICAL);
         var jump       = Input.GetAxis(InputAxes.JUMP);
         var attack     = Input.GetAxis(InputAxes.ATTACK);
+        var hurt       = Input.GetKeyDown(Keymap.HURT);
+        var suicide    = Input.GetKeyDown(Keymap.SUICIDE);
 
         if(horizontal > 0)
         {
@@ -42,6 +52,16 @@ public class DbgSkeletonInput : MonoBehaviour {
         if (attack > 0)
         {
             skeletonController.Attack();
+        }
+
+        if (hurt)
+        {
+            skeletonHealth.Hit(dbgDamage);
+        }
+
+        if (suicide)
+        {
+            skeletonHealth.Hit(99999);
         }
 	}
 }
