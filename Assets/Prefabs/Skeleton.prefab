@@ -26,6 +26,7 @@ GameObject:
   - component: {fileID: 114051762668448204}
   - component: {fileID: 114890185569504716}
   - component: {fileID: 114901412775330458}
+  - component: {fileID: 114326385135340232}
   - component: {fileID: 114512037367224028}
   m_Layer: 0
   m_Name: Skeleton
@@ -129,13 +130,28 @@ MonoBehaviour:
   lowJumpMultiplier: 2
   fallMultiplier: 2.5
   destroyAfterDeathDelay: 5
---- !u!114 &114512037367224028
+--- !u!114 &114326385135340232
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1073691428457582}
   m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87fa5931708a374590345f41eb34648, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distanceToAttack: 1
+  xMinDistanceToStop: 0.2
+  yMaxDistanceToStop: 2
+  skeletonController: {fileID: 114051762668448204}
+--- !u!114 &114512037367224028
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1073691428457582}
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fac568fd31dcee04cb116030965e859b, type: 3}
   m_Name: 
