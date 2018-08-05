@@ -71,7 +71,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e88bdd76b7656e4398aaa6fc09b26b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
+  animator: {fileID: 95011383767419778}
+  spawnPeriod: 3
+  monster: {fileID: 1073691428457582, guid: fb5ad9400976cd145828e0fe6ae9704e, type: 2}
 --- !u!212 &212651440673723906
 SpriteRenderer:
   m_ObjectHideFlags: 1
