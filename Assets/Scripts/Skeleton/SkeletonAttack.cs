@@ -13,7 +13,11 @@ public class SkeletonAttack : MonoBehaviour {
     private void AttackOnAnimEvent()
     {
         var layerMask = LayerMask.GetMask("Player");
+        var layerMaskBlock = LayerMask.GetMask("Block");
         var playerCollider = Physics2D.OverlapCircle(GetGlobalAttackPoint(), radius, layerMask);
+        var playerColliders = Physics2D.OverlapCircleAll(GetGlobalAttackPoint(), radius, layerMask | layerMaskBlock);
+        GameObject nearObject = Fight2D.NearTarget(localAttackPoint, playerColliders);
+        bool inBlock = nearObject != null && nearObject.tag == "BLOCK";
         if (playerCollider == null)
         {
             return;
@@ -24,8 +28,7 @@ public class SkeletonAttack : MonoBehaviour {
         {
             return;
         }
-
-        playerHealth.Hit(damage);
+        playerHealth.Hit(damage, inBlock);
     }
 
     private Vector3 GetGlobalAttackPoint()

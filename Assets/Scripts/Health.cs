@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Health : MonoBehaviour {
 
@@ -7,19 +8,25 @@ public class Health : MonoBehaviour {
     public delegate void Health0Args();
     public event Health0Args OnHit;
     public event Health0Args OnDeath;
+    public delegate bool Health1Args();
+    public event Health1Args IsBlocked;
+
+    public Image healthBar;
 
     public void Start()
     {
         currentHp = maxHp;
     }
 
-    public void Hit(float damage){
+    public void Hit(float damage, bool inBlock){
         if (IsDead())
         {
             return;
         }
-
+        if (inBlock && IsBlocked())
+            damage /= 10;
         currentHp -= damage;
+        healthBar.fillAmount = currentHp / maxHp;
         if (currentHp > 0)
         {
             OnHit();
@@ -29,6 +36,13 @@ public class Health : MonoBehaviour {
             currentHp = 0;
             OnDeath();
         }
+    }
+
+    public void Heal(float ammount)
+    {
+        currentHp += ammount;
+        if (currentHp > maxHp)
+            currentHp = maxHp;
     }
 
     public bool IsAlive()

@@ -5,7 +5,7 @@ public class Fight2D : MonoBehaviour
 {
 
     // функция возвращает ближайший объект из массива, относительно указанной позиции
-    static GameObject NearTarget(Vector3 position, Collider2D[] array)
+    public static GameObject NearTarget(Vector3 position, Collider2D[] array)
     {
         Collider2D current = null;
         float dist = Mathf.Infinity;
@@ -39,7 +39,7 @@ public class Fight2D : MonoBehaviour
             if (obj != null && obj.GetComponent<Health>())
             {
                 //Destroy(obj);
-                obj.GetComponent<Health>().Hit(damage);
+                obj.GetComponent<Health>().Hit(damage,false);
             }
             return;
         }
@@ -48,7 +48,7 @@ public class Fight2D : MonoBehaviour
         {
             if (hit.GetComponent<Health>())
             {
-                hit.GetComponent<Health>().Hit(damage);
+                hit.GetComponent<Health>().Hit(damage,false);
             }
         }
     }
