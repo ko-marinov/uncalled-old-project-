@@ -6,19 +6,30 @@ public class PlayerController : MonoBehaviour {
 
     public float speed;
     public float jumpForce;
-    public enum CHAR_STATE { idle, walk, Jump, Attack, Block };
+    public Transform attack;
+    public Transform blockZone;
+    public float attackRadius;
+    public Health health;
+    public enum CHAR_STATE { idle, walk, Jump, Attack, Block, Hurt };
 
-    private bool isGrounded = false;
+   // private HeroAnimatorCont heroAnimatorCont;
+    private bool            isGrounded = false;
     private Rigidbody2D     heroRigidbody;    
     private SpriteRenderer  spriteRenderer;
     private Animator        animator;
-       
+    private bool            isHitten = false;
+
     // Use this for initialization
     void Start() {
+        health.OnHit += Hurt;
+        health.OnDeath += Death;
+        health.IsBlocked += IsBlock;
+        //heroAnimatorCont = GetComponentInChildren<HeroAnimatorCont>();
         heroRigidbody = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         animator = GetComponentInChildren<Animator>();
     }
+
     void FixedUpdate()
     {
         CheckGround();
@@ -26,22 +37,49 @@ public class PlayerController : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        //Debug.Log(State);
-        if(isGrounded) State = CHAR_STATE.idle;
+        if (isGrounded && !isHitten)
+            State = CHAR_STATE.idle;
         if (isGrounded && Input.GetKey(KeyCode.C)) Block();       
         if (State != CHAR_STATE.Block && Input.GetButton("Horizontal")) Walk();
         if (isGrounded && Input.GetButtonDown("Jump")) Jump();
-        if (Input.GetMouseButtonDown(0)) Attack(); 
-        
+        if (Input.GetMouseButtonDown(0)) Attack();        
     }
 
     private void Attack()
     {
-        State = CHAR_STATE.Attack;
+       State = CHAR_STATE.Attack;
+    }
+
+    private void Hurt()
+    {
+        //Debug.Log("Hurt");
+        if(!IsBlock())
+            StartCoroutine(recoveryAnim());
+        State = CHAR_STATE.Hurt;
+        //Debug.Log(State);
+    }
+
+    IEnumerator recoveryAnim()
+    {
+        isHitten = true;
+        yield return new WaitForSeconds(0.1f);
+        isHitten = false;
+        //Debug.Log(isHitten);
+    }
+
+    private void Death()
+    {
+        health.Heal(100);
+    }
+
+    private bool IsBlock()
+    {
+        return State == CHAR_STATE.Block;
     }
 
     private void Block()
     {
+        blockZone.GetComponent<BoxCollider2D>().enabled = Input.GetKey(KeyCode.C);
         State = CHAR_STATE.Block;
     }
 
@@ -52,7 +90,12 @@ public class PlayerController : MonoBehaviour {
         Vector3 dir = transform.right * Input.GetAxis("Horizontal");
         transform.position = Vector3.MoveTowards(transform.position, transform.position + dir, GetSpeed() * Time.deltaTime);
         spriteRenderer.flipX = dir.x < 0.0F;
-       
+        //TODO Переписать отзеркаливание по оси Х области поражения. 
+        if(dir.x < 0.0F && attack.localPosition.x > 0 || dir.x > 0.0F && attack.localPosition.x < 0)
+            attack.localPosition = new Vector3( -attack.localPosition.x , attack.localPosition.y, attack.localPosition.z);
+        if (dir.x < 0.0F && blockZone.localPosition.x > 0 || dir.x > 0.0F && blockZone.localPosition.x < 0)
+            blockZone.localPosition = new Vector3(-blockZone.localPosition.x, blockZone.localPosition.y, blockZone.localPosition.z);
+        //----------------------------------------
     }
 
     private float GetSpeed()

@@ -56,12 +56,12 @@ public class DbgSkeletonInput : MonoBehaviour {
 
         if (hurt)
         {
-            skeletonHealth.Hit(dbgDamage);
+            skeletonHealth.Hit(dbgDamage,false);
         }
 
         if (suicide)
         {
-            skeletonHealth.Hit(99999);
+            skeletonHealth.Hit(99999,false);
         }
 	}
 }
