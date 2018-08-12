@@ -25,6 +25,11 @@ public class PortalController : MonoBehaviour {
         StopAllCoroutines();
     }
 
+    public bool IsOpen()
+    {
+        return animator.GetBool(PORTAL_OPEN_PARAMETER);
+    }
+
     // private
 
     private const string PORTAL_OPEN_PARAMETER = "IsOpen";

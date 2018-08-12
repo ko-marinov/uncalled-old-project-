@@ -152,6 +152,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 4
       objectReference: {fileID: 0}
+    - target: {fileID: 1156682066050782, guid: fc87c9227683bd54790c6399c0673a09, type: 2}
+      propertyPath: m_TagString
+      value: Portal
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fc87c9227683bd54790c6399c0673a09, type: 2}
   m_IsPrefabAsset: 0

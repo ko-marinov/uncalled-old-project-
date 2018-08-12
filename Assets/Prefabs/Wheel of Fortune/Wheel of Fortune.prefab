@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   wheel: {fileID: 1355463019296776}
+  sectors: []
   maxAngularSpeed: 2000
   angularAcceleration: 1000
   angularDeceleration: 1000
