@@ -37,7 +37,8 @@ public class PlayerCharacter : MonoBehaviour
 
     private KeyCode jumpInput = KeyCode.Space;
 
-    readonly int m_isJumping = Animator.StringToHash("IsJumping");
+    readonly int m_isRunning = Animator.StringToHash("IsRunning");
+    readonly int m_isInAir = Animator.StringToHash("InAir");
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -49,10 +50,13 @@ public class PlayerCharacter : MonoBehaviour
     void Update()
     {
         // Store inputs
-        movementDirection = Input.GetAxis("Horizontal");
+        movementDirection = Input.GetAxisRaw("Horizontal");
         isJumpInputDown = Input.GetKeyDown(jumpInput);
         isJumpInputHeld = Input.GetKey(jumpInput);
         isJumpInputUp = Input.GetKeyUp(jumpInput);
+
+        // TODO: should be placed in FixedUpdate
+        UpdateJump();
     }
 
 
@@ -61,23 +65,23 @@ public class PlayerCharacter : MonoBehaviour
         // Update physics
         UpdateFacing();
         UpdateHorizontalMovement();
-        UpdateJump();
     }
 
     public void UpdateHorizontalMovement()
     {
-        rigidbody.AddForce(new Vector2(movementDirection * movementForce, 0), ForceMode2D.Impulse);
-        if (rigidbody.velocity.x > maxHorizontalSpeed) {
-            rigidbody.velocity = new Vector2(maxHorizontalSpeed, rigidbody.velocity.y);
-        } else if (rigidbody.velocity.x < -maxHorizontalSpeed) {
-            rigidbody.velocity = new Vector2(-maxHorizontalSpeed, rigidbody.velocity.y);
-        }
-
-        if (movementDirection == 0 && IsGrounded()) {
+        if (movementDirection != 0) {
+            rigidbody.AddForce(new Vector2(movementDirection * movementForce, 0), ForceMode2D.Impulse);
+            if (rigidbody.velocity.x > maxHorizontalSpeed) {
+                rigidbody.velocity = new Vector2(maxHorizontalSpeed, rigidbody.velocity.y);
+            } else if (rigidbody.velocity.x < -maxHorizontalSpeed) {
+                rigidbody.velocity = new Vector2(-maxHorizontalSpeed, rigidbody.velocity.y);
+            }
+        } else if (movementDirection == 0 && IsGrounded()) {
             velocity = rigidbody.velocity;
             velocity.x *= (1 - friction);
             rigidbody.velocity = velocity;
         }
+        animator.SetBool(m_isRunning, movementDirection != 0);
     }
 
     public bool IsGrounded()
@@ -93,9 +97,17 @@ public class PlayerCharacter : MonoBehaviour
 
     public void UpdateJump()
     {
+        animator.SetBool(m_isInAir, !IsGrounded());
+        
         if (isJumpInputDown && CanJump()) {
             isJumpStarted = true;
             isJumpStopped = false;
+        } else if (isJumpInputDown) {
+            Debug.Log("Can't JUMP!");
+        }
+
+        if (isJumpInputDown) {
+            Debug.Log("Jump input down " + isJumpInputDown);
         }
 
         if (!isJumpStopped && (isJumpInputUp && isJumpStarted || jumpTimeCounter <= 0)) {
@@ -123,6 +135,14 @@ public class PlayerCharacter : MonoBehaviour
         float moveHorizontal = Input.GetAxis("Horizontal");
         if (moveHorizontal > 0 && spriteRenderer.flipX || moveHorizontal < 0 && !spriteRenderer.flipX) {
             spriteRenderer.flipX = !spriteRenderer.flipX;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D col)
+    {
+        // layer == 8 means layer == "Ground"
+        if (isJumpStarted && col.collider.gameObject.layer == 8) {
+            jumpTimeCounter = 0;
         }
     }
 }
